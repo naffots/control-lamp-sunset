@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+  <body>
+    <table id="scheldule">
+      <tr>
+        <th>Name</th>
+        <th>IP</th>
+        <th>Status</th>
+        <!--        <th>Switch</th> -->
+      </tr>
+  {% for schedObject in scheduleList %}
+      <tr>
+        <td>{{ schedObject['name'] }}</td>
+        <td>{{ schedObject['ip'] }}</td>
+        <td class="{{ schedObject['status'] }}">{{ schedObject['status'] }}</td>
+        <!--<td>
+           <form method="POST">
+            <input type=submit name=toggle_lamp class=button value=Toggle{{ schedObject['id']}}>
+          </form>
+        </td> -->
+      </tr>
+  {% endfor %}
+    </table>
+  </body>
+</html>
