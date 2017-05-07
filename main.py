@@ -64,8 +64,8 @@ def cron_job():
 
 t = threading.Timer(60.0, cron_job)
 t.start()
+init()
+update()
 
 if __name__ == "__main__":
-    init()
-    update()
     app.run()
