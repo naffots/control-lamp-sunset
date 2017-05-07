@@ -1,5 +1,7 @@
 from datetime import datetime, time, timedelta
 import urllib.request
+from astral import Astral, Location
+from pytz import timezone
 
 class ScheduledObject():
     def __init__(self, name, ip, urlOn, urlOff, id):
@@ -34,14 +36,26 @@ class ScheduledObject():
     def init(self):
         self.turn_off()
 
-    def update(self, now):
+    def localize_time(t):
+        d = datetime.today()
+        return ScheduledObject.localize_date(datetime.combine(d, t))
+
+    def localize_date(d):
+        stockholm = timezone('Europe/Stockholm')
+        return stockholm.localize(d)
+
+    def update(self):
         print("Updating {}".format(self.name))
+        localized_now = ScheduledObject.localize_date(datetime.now())
 
         previousStatus = self.status
         self.status = "off"
 
         for (a, b) in self.on_times:
-            if a <= now <= b:
+            a_date = ScheduledObject.localize_time(a)
+            b_date = ScheduledObject.localize_time(b)
+
+            if a_date <= localized_now <= b_date:
                 self.status = "on"
         
         if previousStatus == "off" and self.status == "on":

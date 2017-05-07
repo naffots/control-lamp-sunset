@@ -1,9 +1,7 @@
 from flask import Flask, render_template, request
 from wtforms import Form, BooleanField, StringField, validators, PasswordField
 import threading
-from datetime import datetime, time, timedelta
-from astral import Astral, Location
-from pytz import timezone
+from datetime import time
 from ScheduledObject import ScheduledObject
 
 # Test form with WTForms
@@ -11,29 +9,21 @@ class LoginForm(Form):
     username = StringField('Username')
     password = PasswordField('Password')
 
-def localize_time(h,m):
-    return stockholm.localize(datetime.combine(d, time(h,m)))
-
 # Init
 app = Flask(__name__)
 form = LoginForm()
 scheduleList = []
 
-# ASTRAL
-city = Location(('Gothenburg', 'Sweden',
-        57.50887, 11.97456, 'Europe/Stockholm', 0))
-stockholm = timezone('Europe/Stockholm')
-d = datetime.today()
-wake_time  = localize_time(6,40)
-sleep_time = localize_time(22,00)
+wake_time  = time(6,40)
+sleep_time = time(22,00)
 
 # Add lamp
 s = ScheduledObject("Green Lamp", "192.168.1.68", "on", "off", 0)
-s.add_on_time(localize_time(8,0), sleep_time)
+s.add_on_time(time(8,0), sleep_time)
 scheduleList.append(s)
 
 s2 = ScheduledObject("Star map Lamp", "192.168.1.66", "on", "off", 1)
-s2.add_on_time(localize_time(20,00), sleep_time)
+s2.add_on_time(time(20,00), sleep_time)
 scheduleList.append(s2)
 
 s3 = ScheduledObject("Blinds", "192.168.1.81", "slowOpen", "slowClose", 2)
@@ -63,9 +53,8 @@ def init():
 
 # Update all lamps
 def update():
-    now = stockholm.localize(datetime.now())
     for scheduledObject in scheduleList:
-        scheduledObject.update(now)
+        scheduledObject.update()
 
 # Cron job for schedule
 def cron_job():
