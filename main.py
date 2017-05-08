@@ -12,7 +12,7 @@ class LoginForm(Form):
 # Init
 app = Flask(__name__)
 form = LoginForm()
-scheduleList = []
+scheduleList = {}
 
 wake_time  = time(6,40)
 sleep_time = time(22,00)
@@ -20,23 +20,22 @@ sleep_time = time(22,00)
 # Add lamp
 s = ScheduledObject("Green Lamp", "192.168.1.68", "on", "off", 0)
 s.add_on_time(time(8,0), sleep_time)
-scheduleList.append(s)
+scheduleList["green_lamp"] = s
 
 s2 = ScheduledObject("Star map Lamp", "192.168.1.66", "on", "off", 1)
 s2.add_on_time(time(20,00), sleep_time)
-scheduleList.append(s2)
+scheduleList["star_lamp"] = s2
 
 s3 = ScheduledObject("Blinds", "192.168.1.81", "slowOpen", "slowClose", 2)
 s3.add_on_time(wake_time, sleep_time)
-scheduleList.append(s3)
+scheduleList["blinds"] = s3
 
 # Web page
 @app.route("/", methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        indexStr = request.form['toggle_lamp']
-        index = int(indexStr.replace("Toggle", ""))
-        scheduleList[index].toggle()
+        print(request.form)
+        #scheduleList[index].toggle()
         print("Toggle")
 
     return render_template("index.html", scheduleList=scheduleList )
