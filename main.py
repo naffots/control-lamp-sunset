@@ -23,7 +23,7 @@ s.add_on_time(time(8,0), sleep_time)
 scheduleList["green_lamp"] = s
 
 s2 = ScheduledObject("Star map Lamp", "192.168.1.66", "on", "off", 1)
-s2.add_on_time(time(20,00), sleep_time)
+s2.add_on_time(time(20,00), time(23,00))
 scheduleList["star_lamp"] = s2
 
 s3 = ScheduledObject("Blinds", "192.168.1.81", "slowOpen", "slowClose", 2)
@@ -34,9 +34,8 @@ scheduleList["blinds"] = s3
 @app.route("/", methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        print(request.form)
-        #scheduleList[index].toggle()
-        print("Toggle")
+        schedName = request.form["name"]
+        scheduleList[schedName].toggle()
 
     return render_template("index.html", scheduleList=scheduleList )
 
@@ -47,12 +46,12 @@ def login():
 # Init all lamps
 def init():
     print("Init lamps")
-    for scheduledObject in scheduleList:
+    for (key, scheduledObject) in scheduleList.items():
         scheduledObject.init()
 
 # Update all lamps
 def update():
-    for scheduledObject in scheduleList:
+    for (key, scheduledObject) in scheduleList.items():
         scheduledObject.update()
 
 # Cron job for schedule

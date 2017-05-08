@@ -17,7 +17,10 @@ class ScheduledObject():
         self.on_times.append((startTime, endTime))
 
     def _get_url(self, url):
-        urllib.request.urlopen(url)
+        try:
+            urllib.request.urlopen(url)
+        except:
+            print("Problem with URL ({})".format(url))
 
     def turn_on(self):
         self._get_url("http://" + self.ip + "/" + self.urlOn)
@@ -59,10 +62,10 @@ class ScheduledObject():
                 self.status = "on"
         
         if previousStatus == "off" and self.status == "on":
-            print("Turning lamp on!")
+            print(" - Turning on!")
             self.turn_on()
         elif previousStatus == "on" and self.status == "off":
-            print("Turning lamp off!")
+            print(" - Turning off!")
             self.turn_off()
 
 
