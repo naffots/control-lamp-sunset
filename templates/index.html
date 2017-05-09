@@ -7,7 +7,8 @@
         <th>Name</th>
         <th>IP</th>
         <th>Status</th>
-        <!--        <th>Switch</th> -->
+        <th>Switch</th>
+        <th>Edit</th>
       </tr>
   {% for (key, schedObject) in scheduleList.items() %}
       <tr>
@@ -17,8 +18,16 @@
         <td>
            <form method="POST">
              <input type=hidden name=name value={{key}}>
+             <input type=hidden name=action value=toggle>
              <input type=submit class=button value=Toggle>
-          </form>
+           </form>
+        </td>
+        <td>
+           <form method="POST">
+             <input type=hidden name=name value={{key}}>
+             <input type=hidden name=action value=edit>
+             <input type=submit class=button value=Edit>
+           </form>
         </td>
       </tr>
   {% endfor %}

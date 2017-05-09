@@ -18,15 +18,15 @@ wake_time  = time(6,40)
 sleep_time = time(22,00)
 
 # Add lamp
-s = ScheduledObject("Green Lamp", "192.168.1.68", "on", "off", 0)
+s = ScheduledObject("Green Lamp", "192.168.1.68", "on", "off")
 s.add_on_time(time(8,0), sleep_time)
 scheduleList["green_lamp"] = s
 
-s2 = ScheduledObject("Star map Lamp", "192.168.1.66", "on", "off", 1)
+s2 = ScheduledObject("Star map Lamp", "192.168.1.66", "on", "off")
 s2.add_on_time(time(20,00), time(23,00))
 scheduleList["star_lamp"] = s2
 
-s3 = ScheduledObject("Blinds", "192.168.1.81", "slowOpen", "slowClose", 2)
+s3 = ScheduledObject("Blinds", "192.168.1.81", "slowOpen", "slowClose")
 s3.add_on_time(wake_time, sleep_time)
 scheduleList["blinds"] = s3
 
@@ -35,7 +35,11 @@ scheduleList["blinds"] = s3
 def index():
     if request.method == 'POST':
         schedName = request.form["name"]
-        scheduleList[schedName].toggle()
+
+        if request.form["action"] == "toggle":
+            scheduleList[schedName].toggle()
+        elif request.form["action"] == "edit":
+            print("User pressed edit {}".format(schedName))
 
     return render_template("index.html", scheduleList=scheduleList )
 
