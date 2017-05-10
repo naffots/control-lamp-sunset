@@ -43,9 +43,10 @@ def index():
 
     return render_template("index.html", scheduleList=scheduleList )
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    return "Successful login"
+@app.route('/edit', methods=['GET', 'POST'])
+def edit():
+    schedObject = scheduleList[request.args.get("name")]
+    return render_template("edit.html", scheduleObject = schedObject)
 
 # Init all lamps
 def init():

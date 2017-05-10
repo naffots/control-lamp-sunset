@@ -8,11 +8,10 @@
         <th>IP</th>
         <th>Status</th>
         <th>Switch</th>
-        <th>Edit</th>
       </tr>
   {% for (key, schedObject) in scheduleList.items() %}
       <tr>
-        <td>{{ schedObject['name'] }}</td>
+        <td><a href=/edit?name={{key}}>{{ schedObject['name'] }}</a></td>
         <td>{{ schedObject['ip'] }}</td>
         <td class="{{ schedObject['status'] }}">{{ schedObject['status'] }}</td>
         <td>
@@ -22,14 +21,7 @@
              <input type=submit class=button value=Toggle>
            </form>
         </td>
-        <td>
-           <form method="POST">
-             <input type=hidden name=name value={{key}}>
-             <input type=hidden name=action value=edit>
-             <input type=submit class=button value=Edit>
-           </form>
-        </td>
-      </tr>
+     </tr>
   {% endfor %}
     </table>
   </body>

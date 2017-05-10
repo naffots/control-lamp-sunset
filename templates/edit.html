@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+  <body>
+    <h1> {{ scheduleObject['name'] }} </h1>
+    Status: {{ scheduleObject['status'] }}
+    Override: {{ scheduleObject['override'] }}
+    <table id="scheldule">
+      <tr>
+        <th>Start time</th>
+        <th>Stop time</th>
+      </tr>
+  {% for (a, b) in scheduleObject['on_times'] %}
+      <tr>
+        <td>{{ a }}</td>
+        <td>{{ b }}</td>
+      </tr>
+  {% endfor %}
+    </table>
+  </body>
+</html>
