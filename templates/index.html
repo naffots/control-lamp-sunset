@@ -9,7 +9,7 @@
         <th>Status</th>
         <th>Switch</th>
       </tr>
-  {% for (key, schedObject) in scheduleList.items() %}
+  {% for (key, schedObject) in scheduleList %}
       <tr>
         <td><a href=/edit?name={{key}}>{{ schedObject['name'] }}</a></td>
         <td>{{ schedObject['ip'] }}</td>

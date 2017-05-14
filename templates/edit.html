@@ -9,11 +9,13 @@
       <tr>
         <th>Start time</th>
         <th>Stop time</th>
+        <th>Active days</th>
       </tr>
-  {% for (a, b) in scheduleObject['on_times'] %}
+  {% for (a, b, day) in scheduleObject['on_times'] %}
       <tr>
         <td>{{ a }}</td>
         <td>{{ b }}</td>
+        <td>{{ day.name }}</td>
       </tr>
   {% endfor %}
     </table>

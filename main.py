@@ -2,16 +2,10 @@ from flask import Flask, render_template, request
 from wtforms import Form, BooleanField, StringField, validators, PasswordField
 import threading
 from datetime import time
-from ScheduledObject import ScheduledObject
-
-# Test form with WTForms
-class LoginForm(Form):
-    username = StringField('Username')
-    password = PasswordField('Password')
+from ScheduledObject import ScheduledObject, Days
 
 # Init
 app = Flask(__name__)
-form = LoginForm()
 scheduleList = {}
 
 wake_time  = time(6,40)
@@ -19,15 +13,16 @@ sleep_time = time(22,00)
 
 # Add lamp
 s = ScheduledObject("Green Lamp", "192.168.1.68", "on", "off")
-s.add_on_time(time(8,0), sleep_time)
+s.add_on_time(time(8,0), sleep_time, Days.ALL)
 scheduleList["green_lamp"] = s
 
 s2 = ScheduledObject("Star map Lamp", "192.168.1.66", "on", "off")
-s2.add_on_time(time(20,00), time(23,00))
+s2.add_on_time(time(20,00), time(23,00), Days.ALL)
 scheduleList["star_lamp"] = s2
 
 s3 = ScheduledObject("Blinds", "192.168.1.81", "slowOpen", "slowClose")
-s3.add_on_time(wake_time, sleep_time)
+s3.add_on_time(wake_time, sleep_time, Days.WEEKDAYS)
+s3.add_on_time(time(9,40), sleep_time, Days.WEEKENDS)
 scheduleList["blinds"] = s3
 
 # Web page
@@ -41,7 +36,8 @@ def index():
         elif request.form["action"] == "edit":
             print("User pressed edit {}".format(schedName))
 
-    return render_template("index.html", scheduleList=scheduleList )
+    sortedList = sorted(scheduleList.items(), key= lambda x: x[1].name)
+    return render_template("index.html", scheduleList=sortedList )
 
 @app.route('/edit', methods=['GET', 'POST'])
 def edit():
