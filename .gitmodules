@@ -1,0 +1,3 @@
+[submodule "pyHS100"]
+	path = pyHS100
+	url = https://github.com/GadgetReactor/pyHS100.git

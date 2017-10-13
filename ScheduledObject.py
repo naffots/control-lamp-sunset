@@ -4,9 +4,9 @@ from pytz import timezone
 from enum import IntEnum
 
 class Days(IntEnum):
-    ALL      = 127
-    WEEKDAYS = 31
-    WEEKENDS = 96
+    ALL      = 127 # 1111111
+    WEEKDAYS = 31  # 0011111
+    WEEKENDS = 96  # 1100000
 
 class ScheduledObject():
     def __init__(self, name, ip, urlOn, urlOff):
