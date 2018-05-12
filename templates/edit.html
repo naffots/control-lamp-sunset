@@ -5,6 +5,7 @@
     <h1> {{ scheduleObject['name'] }} </h1>
     Status: {{ scheduleObject['status'] }}
     Override: {{ scheduleObject['override'] }}
+    <h2>OnOff times</h2>
     <table id="scheldule">
       <tr>
         <th>Start time</th>
@@ -12,6 +13,21 @@
         <th>Active days</th>
       </tr>
   {% for (a, b, day) in scheduleObject['on_times'] %}
+      <tr>
+        <td>{{ a }}</td>
+        <td>{{ b }}</td>
+        <td>{{ day.name }}</td>
+      </tr>
+  {% endfor %}
+    </table>
+    <h2>Wake up times</h2>
+    <table id="wake_up_schedule">
+      <tr>
+        <th>Start time</th>
+        <th>Stop time</th>
+        <th>Active days</th>
+      </tr>
+  {% for (a, b, day) in scheduleObject['wake_up_times'] %}
       <tr>
         <td>{{ a }}</td>
         <td>{{ b }}</td>

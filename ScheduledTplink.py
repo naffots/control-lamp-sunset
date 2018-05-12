@@ -5,14 +5,9 @@ sys.path.insert(0, './pyHS100')
 from pyHS100 import SmartBulb, SmartPlug
 
 class ScheduledTplink(ScheduledObject):
-    def __init__(self, name, ip, tpType):
-        self.name = name
-        self.ip = ip
-        self.urlOn = ""
-        self.urlOff = ""
-        self.on_times = []
-        self.status = "off"
-        self.override = False
+    def __init__(self, name, ip, tpType, isDimmable=False):
+        ScheduledObject.__init__(self, name, ip, "", "", isDimmable)  
+
         if tpType == "bulb":
             self.tpObj = SmartBulb(ip)
         elif tpType == "plug":
@@ -23,10 +18,30 @@ class ScheduledTplink(ScheduledObject):
     def turn_on(self):
         print(" - Turning on!")
         self.status = "on"
-        self.tpObj.turn_on()
+        try:
+           self.tpObj.turn_on()
+        except:
+           print("Cannot access tplink {}".format(self.ip))
+            
+        
 
     def turn_off(self):
         print(" - Turning off!")
         self.status = "off"
-        self.tpObj.turn_off()
+        try:
+           self.tpObj.turn_off()
+        except:
+           print("Cannot access tplink {}".format(self.ip))
 
+    def set_brightness(self, brightness):
+        if self.isDimmable:
+            try:
+                self.tpObj.brightness = brightness
+            except:
+                print("Cannot access tplink {}".format(self.ip))
+
+    def get_brightness():
+        if self.isDimmable:
+            return self.tpObj.brightness
+        else:
+            return 100
