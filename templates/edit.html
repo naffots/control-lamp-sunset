@@ -3,7 +3,7 @@
   <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
   <body>
     <h1> {{ scheduleObject['name'] }} </h1>
-    Status: {{ scheduleObject['status'] }}
+    Status: {{ scheduleObject.get_status() }}
     Override: {{ scheduleObject['override'] }}
     <h2>OnOff times</h2>
     <table id="scheldule">

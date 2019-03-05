@@ -19,26 +19,30 @@ class ScheduledTplink(ScheduledObject):
         print(" - Turning on!")
         self.status = "on"
         try:
-           self.tpObj.turn_on()
+            self.tpObj.turn_on()
+            self.online = True
         except:
-           print("Cannot access tplink {}".format(self.ip))
-            
-        
+            print("Cannot access tplink {}".format(self.ip))
+            self.online = False
 
     def turn_off(self):
         print(" - Turning off!")
         self.status = "off"
         try:
-           self.tpObj.turn_off()
+            self.tpObj.turn_off()
+            self.online = True
         except:
-           print("Cannot access tplink {}".format(self.ip))
+            print("Cannot access tplink {}".format(self.ip))
+            self.online = False
 
     def set_brightness(self, brightness):
         if self.isDimmable:
             try:
                 self.tpObj.brightness = brightness
+                self.online = True
             except:
                 print("Cannot access tplink {}".format(self.ip))
+                self.online = False
 
     def get_brightness():
         if self.isDimmable:

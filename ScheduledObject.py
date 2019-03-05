@@ -1,8 +1,9 @@
-from datetime import datetime, time, timedelta
+from datetime import datetime, timedelta
 import urllib.request
 from pytz import timezone
 from enum import IntEnum
 import threading
+import time
 
 class Days(IntEnum):
     ALL      = 127 # 1111111
@@ -20,8 +21,10 @@ class ScheduledObject():
         self.status = "off"
         self.override = False
         self.brightnessStep = 1
+        self.timerstep = 10
         self.isDimmable = isDimmable
-	self.timer = None
+        self.timer = None
+        self.online = False
 
     def add_on_time(self, startTime, endTime, days):
         self.on_times.append((startTime, endTime, days))
@@ -32,17 +35,27 @@ class ScheduledObject():
     def _get_url(self, url):
         try:
             urllib.request.urlopen(url)
+            self.online = True
         except:
-            print("Problem with URL ({})".format(url))
+            print("{} - Problem with URL ({})".format(self.name, url))
+            self.online = False
 
     def _post_url(self, url, data):
         try:
-             params = urllib.parse.urlencode(data)
-             params = params.encode('ascii')
-             urllib.request.urlopen(url, params)
+            params = urllib.parse.urlencode(data)
+            params = params.encode('ascii')
+            urllib.request.urlopen(url, params)
+            self.online = True
         except:
-             print("Problem POST URL ({})".format(url))
+            print("{} - Problem POST URL ({})".format(self.name, url))
+            self.online = False
 
+    def get_status(self):
+        if self.online:
+            return self.status
+        else:
+            return "off"
+        
     def turn_on(self):
         print(" - Turning on!")
         self.status = "on"
@@ -90,7 +103,7 @@ class ScheduledObject():
         day_of_week = datetime.now().weekday()
         day_of_week_mask = 1 << day_of_week
 
-        previousStatus = self.status
+        previousStatus = self.get_status()
         nextStatus = "off"
 
         # On Off switch
@@ -101,7 +114,7 @@ class ScheduledObject():
             if day & day_of_week_mask: 
                 if a_date <= localized_now <= b_date:
                     nextStatus = "on"
-
+            
         # Wake up light time
         for (a, b, day) in self.wake_up_times:
             a_date = ScheduledObject.localize_time(a)
@@ -112,13 +125,15 @@ class ScheduledObject():
                     nextStatus = "on"
 
                     if previousStatus == "off":
-						if not self.timer:
-							self.wake_up_light(self.brightnessStep)
-							self.set_brightness(0)
-						else:
-							print("Timer is already set for this device")
-        
-            
+                        if not self.timer:
+                            self.turn_on()
+                            self.set_brightness(0)
+                            self.turn_off()
+                            self.wake_up_light(self.brightnessStep)
+                            time.sleep(2)
+                        else:
+                            print("Timer is already set for this device")
+
         if previousStatus == "off" and nextStatus == "on":
             if not self.override:
                 self.turn_on()
@@ -128,17 +143,20 @@ class ScheduledObject():
         else:
             self.override = False
 
+        
+
 
     # Cron job for wake up light
     def wake_up_light(self, brightness):
-		print("{} is increasing brightness to {}".format(self.name, brightness))
-		self.set_brightness(brightness) 
-		nextBrightness = brightness + self.brightnessStep
+        if self.status:
+            print("{} is increasing brightness to {}".format(self.name, brightness))
+            self.set_brightness(brightness) 
+            nextBrightness = brightness + self.brightnessStep
 
-		if nextBrightness <= 100:
-			# Arm timer width next brightness level
-			self.timer = threading.Timer(1.0, self.wake_up_light, args=[nextBrightness])
-			self.timer.start()
-		else:
-			# Unarm timer
-			self.timer = None
+            if nextBrightness <= 100:
+                # Arm timer width next brightness level
+                self.timer = threading.Timer(self.timerstep, self.wake_up_light, args=[nextBrightness])
+                self.timer.start()
+            else:
+                # Unarm timer
+                self.timer = None

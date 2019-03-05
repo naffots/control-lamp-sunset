@@ -10,41 +10,38 @@ import json
 app = Flask(__name__)
 scheduleList = {}
 
-wake_time  = time(6,20)
+wake_time  = time(6,14)
 sleep_time = time(22,00)
 
-# Add lamp
-s = ScheduledObject("Green Lamp", "192.168.1.64", "on", "off")
-s.add_on_time(time(8,0), sleep_time, Days.ALL)
-scheduleList["green_lamp"] = s
 
-s2 = ScheduledObject("Star map Lamp", "192.168.1.66", "on", "off")
-s2.add_on_time(time(20,00), time(23,00), Days.ALL)
-scheduleList["star_lamp"] = s2
+#s2 = ScheduledObject("Star map Lamp", "192.168.1.66", "on", "off")
+#s2.add_on_time(time(20,00), time(23,00), Days.ALL)
+#scheduleList["star_lamp"] = s2
 
-s3 = ScheduledObject("Blinds", "192.168.1.81", "open", "close", isDimmable=True)
-s3.add_wake_up_light_time(wake_time, sleep_time, Days.WEEKDAYS)
-s3.add_wake_up_light_time(time(9,20), sleep_time, Days.WEEKENDS)
-scheduleList["blinds"] = s3
-
-s4 = ScheduledTplink("Batcave", "192.168.1.70", "bulb", isDimmable=True)
+s4 = ScheduledTplink("Batcave", "192.168.1.106", "bulb", isDimmable=True)
 s4.add_on_time(time(19,00), sleep_time, Days.ALL)
-s4.add_wake_up_light_time(wake_time, time(9,00), Days.WEEKDAYS)
+s4.add_wake_up_light_time(wake_time, time(8,00), Days.WEEKDAYS)
 s4.add_wake_up_light_time(time(9,20), time(11,0), Days.WEEKENDS)
 scheduleList["batcave"] = s4
 
-s5 = ScheduledTplink("Ljusslinga", "192.168.1.88", "plug")
+s5 = ScheduledTplink("Ljusslinga", "192.168.1.131", "plug")
 s5.add_on_time(time(7, 00), time(10,00), Days.ALL)
 s5.add_on_time(time(18,00), sleep_time, Days.ALL)
 scheduleList["ljusslinga"] = s5
 
-s6 = ScheduledObject("LED-slinga", "192.168.1.84", "on", "off", isDimmable=True)
+s6 = ScheduledObject("LED-slinga", "192.168.1.144", "on", "off", isDimmable=True)
 s6.add_on_time(wake_time, sleep_time, Days.WEEKDAYS)
 s6.add_on_time(time(9,20), sleep_time, Days.WEEKENDS)
 scheduleList["ledstrip"] = s6
 
-s7 = ScheduledObject("TV", "192.168.1.73", "on", "off")
-scheduleList["tv"] = s7
+s7 = ScheduledTplink("Fortress of solitude", "192.168.1.114", "bulb", isDimmable=True)
+s7.add_on_time(time(19,00), sleep_time, Days.ALL)
+scheduleList["fortress"] = s7
+
+s8 = ScheduledTplink("Taklampa", "192.168.1.132", "bulb", isDimmable=True)
+s8.add_on_time(time(19,00), sleep_time, Days.ALL)
+scheduleList["taklampa"] = s8
+
 
 # Web page
 @app.route("/", methods=['GET', 'POST'])
