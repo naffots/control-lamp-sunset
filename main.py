@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, redirect
-from wtforms import Form, BooleanField, StringField, validators, PasswordField
 import threading
 from datetime import time
 from ScheduledObject import ScheduledObject, Days
@@ -24,7 +23,7 @@ s4.add_wake_up_light_time(wake_time, time(8,00), Days.WEEKDAYS)
 s4.add_wake_up_light_time(time(9,20), time(11,0), Days.WEEKENDS)
 scheduleList["batcave"] = s4
 
-s5 = ScheduledTplink("Ljusslinga", "192.168.1.131", "plug")
+s5 = ScheduledTplink("Ljusslinga", "192.168.1.132", "plug")
 s5.add_on_time(time(7, 00), time(10,00), Days.ALL)
 s5.add_on_time(time(18,00), sleep_time, Days.ALL)
 scheduleList["ljusslinga"] = s5
@@ -38,7 +37,7 @@ s7 = ScheduledTplink("Fortress of solitude", "192.168.1.114", "bulb", isDimmable
 s7.add_on_time(time(19,00), sleep_time, Days.ALL)
 scheduleList["fortress"] = s7
 
-s8 = ScheduledTplink("Taklampa", "192.168.1.132", "bulb", isDimmable=True)
+s8 = ScheduledTplink("Taklampa", "192.168.1.131", "bulb", isDimmable=True)
 s8.add_on_time(time(19,00), sleep_time, Days.ALL)
 scheduleList["taklampa"] = s8
 
